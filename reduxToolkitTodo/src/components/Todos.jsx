@@ -1,25 +1,54 @@
-import React from 'react'
+import React,{useState} from 'react'
 import {useDispatch, useSelector} from 'react-redux'
-import {removeTodo} from '../features/todoSlice'
+import {removeTodo,editTodo, allowTodoEdit} from '../features/todoSlice'
 
 function Todos(){
     const todos = useSelector((state)=> state.todos)
     const dispatch = useDispatch()
+
+    
 
     return(
         <>
         <div>Todos</div>
         <ul className="list-none">
             {todos.map((todo)=>(
+                // {setTodoMsg(todo.text)}
                 <li
                     className="mt-4 flex justify-between items-center bg-zinc-800 px-4 py-2 rounded"
                     key={todo.id}
                 >
-                    <div className='text-white'>{todo.text}</div>
+                    <input 
+                        type = "text"
+                        className={`text-white ${
+                        todo.allowEdit ? "border-black/10 px-2 bg-zinc-600" : "border-transparent"
+                        }`}
+                        // className = "text-white"
+                        value = {todo.text}
+                        onChange={(e) => dispatch(editTodo({id:todo.id, text:e.target.value}))}
+                        readOnly = {!todo.allowEdit}
+                    />
+                     <button
+                        className="inline-flex w-8 h-8 rounded-lg text-sm border border-black/10 justify-center items-center bg-gray-50 hover:bg-gray-100 shrink-0 disabled:opacity-50"
+                        onClick={() => {
+                        // if (todo.completed) return;
+
+                       
+                        dispatch(allowTodoEdit({id:todo.id}))
+                        
+                        
+                    }}
+                        // disabled={todo.completed}
+                    >
+                        {"✏️"}
+                    </button>
+
+                    
                     <button
                     onClick={() => dispatch(removeTodo(todo.id))}
                     className="text-white bg-red-500 border-0 py-1 px-4 focus:outline-none hover:bg-red-600 rounded text-md"
                     >
+
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
